@@ -26,6 +26,17 @@ class Cell:
         # Each cell will have a specific random color
         self.color = color
 
+        if id is 0:
+            # Empty
+            # White - Gray Shader
+            shaderInt = random.randint(173,221)
+            self.color = [shaderInt,shaderInt,shaderInt]
+        elif id is 1:
+            # Wall
+            # Gray - Black Shader
+            shaderInt = random.randint(72, 126)
+            self.color = [shaderInt, shaderInt, shaderInt]
+
         self.neighbors = [] # contains all the neighbors of this cell (4 Connected)
         self.tower = None # This will contain a tower later
 
