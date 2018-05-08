@@ -16,6 +16,8 @@ class Map:
         self.end = 0
         self.map = [] # Contains all the cells that make up the map
         self.path = [] # Ordered list of cells that make up the path for the enemies
+        self.startCell = None
+        self.endCell = None
 
     # Generate a map of cells
     # widthNo - the number of cells in width
@@ -28,8 +30,8 @@ class Map:
         self.start = [random.randint(0, widthNo), random.randint(0,heightNo)]
         self.end = [random.randint(0, widthNo), random.randint(0,heightNo)]
 
-        cellWidth = self.windowWidth/widthNo
-        cellHeight = self.windowHeight/heightNo
+        cellWidth = round(self.windowWidth/widthNo)
+        cellHeight = round(self.windowHeight/heightNo)
 
         # print("Calculated Cell Height Count: " + str(heightNo))
         # print("Calculated Cell Width Count: " + str(widthNo))
@@ -52,11 +54,22 @@ class Map:
                 self.map.append(newCell)
 
         self.findNeighbors()
+
+        startPosition = [self.start[0] * self.widthNumber, self.start[1] * self.heightNumber]
+        self.startCell = self.findCursorCell(startPosition)
+        print("Set start cell")
+
+        endPosition = [self.end[0] * self.widthNumber, self.end[1] * self.heightNumber]
+        self.endCell = self.findCursorCell(endPosition)
+        print("Set end cell")
+
+        # Debugging print statement in order to print out the current map
         # self.printArrayCellContents()
 
     # Create a path from the start to the end, make the path a little interesting
     def generatePath(self):
         path = [] # contains all the cells that make up the path
+
 
 
         for cell in path:
@@ -83,11 +96,6 @@ class Map:
 
         map = self.map
 
-        cellZero = map[0]
-        cellZero_1 = map[1]
-        cellZero_2 = map[self.widthNumber]
-        cellZero.neighbors = [None, cellZero_2, None, cellZero_1]
-
         for i in range(0, len(map)):
             neighbors = []
 
@@ -104,7 +112,7 @@ class Map:
                 neighbors.append(None)
 
             # Check the left
-            if ((i - 1) % self.widthNumber) is not 0 and i - 1 > 0:
+            if ((i) % self.widthNumber) is not 0 and i - 1 > 0:
                 neighbors.append(map[i - 1])
             else:
                 neighbors.append(None)

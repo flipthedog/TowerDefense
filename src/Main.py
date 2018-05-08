@@ -1,13 +1,22 @@
-import sys, pygame
+import sys, pygame, os
 import tkinter
 import time
 from Map import Map
 
 def drawMap(map):
 
-    for cell in map:
+    for cell in map.map:
         color = pygame.Color(cell.color[0], cell.color[1], cell.color[2], 255)
         pygame.draw.rect(screen, color, (cell.x, cell.y, cell.width, cell.height), 0)
+
+    cell = map.startCell
+    color = pygame.Color(0, 255, 0, 255)
+    pygame.draw.rect(screen, color, (cell.x, cell.y, cell.width, cell.height), 0)
+
+    cell = map.endCell
+    color = pygame.Color(255, 0, 0, 255)
+    pygame.draw.rect(screen, color, (cell.x, cell.y, cell.width, cell.height), 0)
+
 
 pygame.init()
 root = tkinter.Tk()
@@ -15,6 +24,9 @@ width = root.winfo_screenwidth() - 100
 height = root.winfo_screenheight() - 100
 windowSize = width, height
 black = 0, 0, 0
+win_pos_left = 0
+win_pos_top = 25
+os.environ['SDL_VIDEO_WINDOW_POS'] = '{0},{1}'.format(win_pos_left, win_pos_top)
 
 screen = pygame.display.set_mode(windowSize)
 pygame.display.set_caption("Tower Defense")
@@ -24,7 +36,8 @@ map = Map(width, height)
 map.generateMap(30,20)
 
 map.generatePath()
-drawMap(map.map)
+
+drawMap(map)
 
 mousePos = pygame.mouse.get_pos()
 closestCell = map.findCursorCell(mousePos)
@@ -45,14 +58,16 @@ while 1:
     # print("Closesr Cell x:" + str(closestCell.x))
     # print("Closesr Cell y:" + str(closestCell.y))
 
-    closestCell.color = [255,255,0]
-    # for neighbor in closestCell.neighbors:
-    #     if(neighbor is not None):
-    #         neighbor.color = [255,255,0]
+    #closestCell.color = [255,255,0]
+    for neighbor in closestCell.neighbors:
+         if(neighbor is not None):
+             neighbor.color = [255,255,0]
 
-    drawMap(map.map)
+    drawMap(map)
 
     pygame.display.flip()
     time.sleep(0.05)
-# Draw the map
 
+    for neighbor in closestCell.neighbors:
+        if(neighbor is not None):
+            neighbor.redoColor()

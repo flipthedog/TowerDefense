@@ -16,8 +16,9 @@ class Cell:
         self.height = height # Total height of the cell
 
         #CELL IDS:
-        # Road - 1
-        # Wall - 0
+        # Road - 2
+        # Wall - 1
+        # Empty - 0
         self.id = id # Contains the id of the cell
 
         # Color
