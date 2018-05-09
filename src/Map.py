@@ -14,10 +14,14 @@ class Map:
         self.windowHeight = height
         self.widthNumber = 0
         self.heightNumber = 0
-        self.start = 0
-        self.end = 0
+
         self.map = [] # Contains all the cells that make up the map
         self.path = [] # Ordered list of cells that make up the path for the enemies
+        self.enemies = [] # List of all enemies currently on the field
+        self.level = 0 # Incrementing level variable, increases difficulty
+
+        self.start = 0
+        self.end = 0
         self.startCell = None
         self.endCell = None
 
@@ -61,8 +65,8 @@ class Map:
         # End cell, bottom right quarter of map
         self.start = [random.randint(0, round(widthNo/4)), random.randint(0, round(heightNo/4))]
         self.end = [random.randint(round(3*widthNo/4), widthNo), random.randint(round(3*heightNo/4), heightNo)]
-        print("This is start: " + str(self.start))
-        print("This is end: " + str(self.end))
+        # print("This is start: " + str(self.start))
+        # print("This is end: " + str(self.end))
 
         startPosition = [self.start[0] * self.map[0].width, self.start[1] * self.map[0].height]
         self.startCell = self.findCursorCell(startPosition)
@@ -139,13 +143,12 @@ class Map:
             heapq.heapify(notEvaluated)
             currentCell = heapq.heappop(notEvaluated)[1]
             notEvaluatedCheck.remove(currentCell)
-            print("Length of notEvaluatedCheck" + str(len(notEvaluatedCheck)))
 
             if currentCell.isSameLocation(endCell):
-                print("Found a path")
+                # print("Found a path")
                 return previousCells
 
-            print("Iterated")
+            # print("Iterated")
             evaluated.append(currentCell)
             previousCells.append(currentCell)
 
@@ -159,7 +162,7 @@ class Map:
                     neighborFCost = neighbor.calcDistance(endCell)
                     heapq.heappush(notEvaluated, (neighborFCost, neighbor))
                     notEvaluatedCheck.append(neighbor)
-                    print("Neighbor added" + str(len(notEvaluatedCheck)))
+                    # print("Neighbor added" + str(len(notEvaluatedCheck)))
 
         print("\n\nPATH NOT FOUND\n\n")
 
@@ -209,12 +212,29 @@ class Map:
 
             map[i].neighbors = neighbors
 
+    # Designate a certain number of empty cells along the path as walls which can house buildings
+    def generateWall(self):
+        numberPath = []
+        self.walls = []
 
-    def findNeighborsCell(self,cell):
-        neighbors = []
+        for cell in self.path:
+            numberOfWalls = random.randint(0,2) # Create between 0 and 2 walls
+            numberPath.append(numberOfWalls)
 
+        for i in range(0,len(self.path)):
+            cell = self.path[i]
+            neighbors = cell.neighbors
+            limitWalls = numberPath[i]
+            currentWalls = 0
+            for i in range(0,len(neighbors)):
+                neighborCell = neighbors[i]
+                if limitWalls <= currentWalls:
+                    if neighborCell is not None and not neighborCell.id is 2:
+                        neighborCell.id = 1
+                        neighborCell.redoColor()
+                        self.walls.append(neighborCell)
+                        currentWalls = currentWalls + 1
 
-        return neighbors
 
     # Find the closest cell based on a position entered
     def findCursorCell(self, position):

@@ -1,5 +1,5 @@
 import sys, pygame, os
-import tkinter
+
 import time
 from Map import Map
 
@@ -19,7 +19,16 @@ def drawMap(map):
 
 
 pygame.init()
-root = tkinter.Tk()
+print(os.name)
+osString = os.name
+
+if osString is "posix":
+    import Tkinter
+    root = Tkinter.Tk()
+else:
+    import tkinter
+    root = tkinter.Tk()
+
 width = root.winfo_screenwidth() - 100
 height = root.winfo_screenheight() - 100
 windowSize = width, height
@@ -33,11 +42,13 @@ pygame.display.set_caption("Tower Defense")
 
 map = Map(width, height)
 
-mapWidthCells = 100
-mapHeightCells = 60
+mapWidthCells = 18
+mapHeightCells = 14
 map.generateMap(mapWidthCells, mapHeightCells)
 
 map.generatePath(mapWidthCells, mapHeightCells)
+
+map.generateWall()
 
 drawMap(map)
 
