@@ -26,24 +26,29 @@ class Cell:
         # Each cell will have a specific random color
         self.color = color
 
-        if id is 0:
-            # Empty
-            # White - Gray Shader
-            shaderInt = random.randint(173,221)
-            self.color = [shaderInt,shaderInt,shaderInt]
-        elif id is 1:
-            # Wall
-            # Gray - Black Shader
-            shaderInt = random.randint(72, 126)
-            self.color = [shaderInt, shaderInt, shaderInt]
+        self.redoColor()
 
         self.neighbors = [] # contains all the neighbors of this cell (4 Connected)
         self.tower = None # This will contain a tower later
 
     def redoColor(self):
         color = [0, 0, 0]
-        randomInt = random.randint(1, 30)
-        color[0] = randomInt
-        color[1] = randomInt
-        color[2] = randomInt
-        self.color = color
+
+        if self.id is 0:
+            # Empty
+            # Gray - Black Shader
+            shaderInt = random.randint(72, 126)
+            self.color = [shaderInt,shaderInt,shaderInt]
+        elif self.id is 1:
+            # Wall
+            # Gray - Blue
+            shaderInt1 = random.randint(10, 23)
+            shaderInt2 = random.randint(28, 61)
+            self.color = [0, shaderInt1, shaderInt2]
+        elif self.id is 2:
+            # Road
+            # White - Gray shader
+            shaderInt = random.randint(173, 221)
+            self.color = [shaderInt, shaderInt, shaderInt]
+        else:
+            self.color = color

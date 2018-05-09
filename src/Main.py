@@ -35,7 +35,7 @@ map = Map(width, height)
 
 map.generateMap(30,20)
 
-map.generatePath()
+map.generatePath(30,20)
 
 drawMap(map)
 

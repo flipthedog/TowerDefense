@@ -27,8 +27,7 @@ class Map:
         # Create random start and end points
         self.widthNumber = widthNo
         self.heightNumber = heightNo
-        self.start = [random.randint(0, widthNo), random.randint(0,heightNo)]
-        self.end = [random.randint(0, widthNo), random.randint(0,heightNo)]
+
 
         cellWidth = round(self.windowWidth/widthNo)
         cellHeight = round(self.windowHeight/heightNo)
@@ -48,33 +47,56 @@ class Map:
                 color[1] = randomInt
                 color[2] = randomInt
 
-                newCell = Cell(j*cellWidth, i*cellHeight, cellWidth, cellHeight, 0, color)
+                newCell = Cell(j*cellWidth, i*cellHeight, cellWidth, cellHeight, 1, color)
                 # find all the neighbors of the cell
 
                 self.map.append(newCell)
 
         self.findNeighbors()
 
-        startPosition = [self.start[0] * self.widthNumber, self.start[1] * self.heightNumber]
-        self.startCell = self.findCursorCell(startPosition)
-        print("Set start cell")
+        # Defining the start and end cells
+        # Start cell, top left quarter of map
+        # End cell, bottom right quarter of map
+        self.start = [random.randint(0, round(widthNo/4)), random.randint(0, round(heightNo/4))]
+        self.end = [random.randint(round(3*widthNo/4), widthNo), random.randint(round(3*heightNo/4), heightNo)]
+        print("This is start: " + str(self.start))
+        print("This is end: " + str(self.end))
 
-        endPosition = [self.end[0] * self.widthNumber, self.end[1] * self.heightNumber]
+        startPosition = [self.start[0] * self.map[0].width, self.start[1] * self.map[0].height]
+        self.startCell = self.findCursorCell(startPosition)
+
+        endPosition = [self.end[0] * self.map[0].width, self.end[1] * self.map[0].height]
         self.endCell = self.findCursorCell(endPosition)
-        print("Set end cell")
 
         # Debugging print statement in order to print out the current map
         # self.printArrayCellContents()
 
     # Create a path from the start to the end, make the path a little interesting
-    def generatePath(self):
+    def generatePath(self, widthNo, heightNo):
         path = [] # contains all the cells that make up the path
 
+        # Create multiple different waypoints and connect them with paths
+        # Waypoint for the top right quarter
+        waypoint1 = [random.randint(round(widthNo/4), round(3*widthNo/4)), random.randint(0, round(heightNo/2))]
+        # Waypoint for the bottom left corner
+        waypoint2 = [random.randint(0, round(widthNo/2)), random.randint(round(heightNo/4), round(3*heightNo/4))]
 
+        way1Position = [waypoint1[0] * self.map[0].width, waypoint1[1] * self.map[0].height]
+        self.waypoint1Cell = self.findCursorCell(way1Position)
 
+        way2Position = [waypoint2[0] * self.map[0].width, waypoint2[1] * self.map[0].height]
+        self.waypoint2Cell = self.findCursorCell(way2Position)
+
+        self.waypoint1Cell.id = 2
+        self.waypoint2Cell.id = 2
+
+        self.waypoint1Cell.redoColor()
+        self.waypoint2Cell.redoColor()
+
+        # Find the corresponding waypoint cells
         for cell in path:
             # Update the cell ids in the path
-            cell.id = 1
+            cell.id = 2
             cell.color = [0, 0, 0]
 
         self.path = path
