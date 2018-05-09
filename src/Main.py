@@ -7,7 +7,7 @@ def drawMap(map):
 
     for cell in map.map:
         color = pygame.Color(cell.color[0], cell.color[1], cell.color[2], 255)
-        pygame.draw.rect(screen, color, (cell.x, cell.y, cell.width, cell.height), 0)
+        pygame.draw.rect(screen, color, (cell.x , cell.y , cell.width, cell.height), 0)
 
     cell = map.startCell
     color = pygame.Color(0, 255, 0, 255)
@@ -33,9 +33,11 @@ pygame.display.set_caption("Tower Defense")
 
 map = Map(width, height)
 
-map.generateMap(30,20)
+mapWidthCells = 100
+mapHeightCells = 60
+map.generateMap(mapWidthCells, mapHeightCells)
 
-map.generatePath(30,20)
+map.generatePath(mapWidthCells, mapHeightCells)
 
 drawMap(map)
 

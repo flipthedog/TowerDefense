@@ -4,6 +4,8 @@
 import math
 from Cell import Cell
 import random
+import heapq
+
 
 class Map:
 
@@ -47,7 +49,7 @@ class Map:
                 color[1] = randomInt
                 color[2] = randomInt
 
-                newCell = Cell(j*cellWidth, i*cellHeight, cellWidth, cellHeight, 1, color)
+                newCell = Cell(j * cellWidth, i * cellHeight, cellWidth, cellHeight, 0, color)
                 # find all the neighbors of the cell
 
                 self.map.append(newCell)
@@ -93,13 +95,73 @@ class Map:
         self.waypoint1Cell.redoColor()
         self.waypoint2Cell.redoColor()
 
+        path1 = self.greedyBFS(self.startCell,self.waypoint1Cell)
+        path2 = self.greedyBFS(self.waypoint1Cell, self.waypoint2Cell)
+        path3 = self.greedyBFS(self.waypoint2Cell, self.endCell)
+
+        for cell in path1:
+            path.append(cell)
+        for cell in path2:
+            path.append(cell)
+        for cell in path3:
+            path.append(cell)
+
+
         # Find the corresponding waypoint cells
         for cell in path:
             # Update the cell ids in the path
             cell.id = 2
-            cell.color = [0, 0, 0]
+            cell.redoColor()
 
         self.path = path
+
+    
+    def greedyBFS(self, startCell, endCell):
+        evaluated = []
+
+        # HEAP
+        # stores tuples
+        #   FIRST - fCost of the cell
+        #   SECOND - cell itself
+        notEvaluated = [] # Keep this as a heap with heapify
+        notEvaluatedCheck = [] # Array to make sure everything stays on the same page
+
+        # Dictionary containing the path
+        previousCells = []
+
+        # Calculate the euclidian distance to the cell
+        startFCost = startCell.calcDistance(endCell)
+
+        heapq.heappush(notEvaluated, (startFCost, startCell))
+        notEvaluatedCheck.append(startCell)
+
+        while not len(notEvaluatedCheck) <= 0 :
+            heapq.heapify(notEvaluated)
+            currentCell = heapq.heappop(notEvaluated)[1]
+            notEvaluatedCheck.remove(currentCell)
+            print("Length of notEvaluatedCheck" + str(len(notEvaluatedCheck)))
+
+            if currentCell.isSameLocation(endCell):
+                print("Found a path")
+                return previousCells
+
+            print("Iterated")
+            evaluated.append(currentCell)
+            previousCells.append(currentCell)
+
+            for neighbor in currentCell.neighbors:
+
+                if neighbor in evaluated or neighbor is None:
+                    continue
+
+
+                if not notEvaluatedCheck.__contains__(neighbor):
+                    neighborFCost = neighbor.calcDistance(endCell)
+                    heapq.heappush(notEvaluated, (neighborFCost, neighbor))
+                    notEvaluatedCheck.append(neighbor)
+                    print("Neighbor added" + str(len(notEvaluatedCheck)))
+
+        print("\n\nPATH NOT FOUND\n\n")
 
     def printArrayCellContents(self):
 

@@ -2,7 +2,7 @@
 # Wi
 # Floris van Rossum
 
-import random
+import random, math
 
 class Cell:
 
@@ -30,6 +30,19 @@ class Cell:
 
         self.neighbors = [] # contains all the neighbors of this cell (4 Connected)
         self.tower = None # This will contain a tower later
+
+    # Calculate the distance between given cell and another cell
+    def calcDistance(self, otherCell):
+        return math.sqrt((otherCell.x - self.x) ** 2 + (otherCell.y - self.y) ** 2)
+
+    # Check if this cell location is same as the given cell location
+    def isSameLocation(self, otherCell):
+        if self.x is otherCell.x and self.y is otherCell.y:
+            # They are the same cell
+            return True
+        else:
+            # They are not the same cell
+            return False
 
     def redoColor(self):
         color = [0, 0, 0]
