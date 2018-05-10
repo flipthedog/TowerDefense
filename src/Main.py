@@ -2,6 +2,7 @@ import sys, pygame, os
 
 import time
 from Map import Map
+from Enemy import Enemy
 
 def drawMap(map):
 
@@ -16,6 +17,7 @@ def drawMap(map):
     cell = map.endCell
     color = pygame.Color(255, 0, 0, 255)
     pygame.draw.rect(screen, color, (cell.x, cell.y, cell.width, cell.height), 0)
+
 
 
 pygame.init()
@@ -77,9 +79,9 @@ while 1:
              neighbor.color = [255,255,0]
 
     drawMap(map)
-
+    map.update(screen)
     pygame.display.flip()
-    time.sleep(0.05)
+    time.sleep(0.01)
 
     for neighbor in closestCell.neighbors:
         if(neighbor is not None):

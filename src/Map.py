@@ -5,7 +5,7 @@ import math
 from Cell import Cell
 import random
 import heapq
-
+from Enemy import Enemy
 
 class Map:
 
@@ -19,11 +19,16 @@ class Map:
         self.path = [] # Ordered list of cells that make up the path for the enemies
         self.enemies = [] # List of all enemies currently on the field
         self.level = 0 # Incrementing level variable, increases difficulty
+        self.velocityPath = []
 
         self.start = 0
         self.end = 0
         self.startCell = None
         self.endCell = None
+
+    def createEnemy(self):
+        enemy1 = Enemy(0, 0, self.path)
+        self.enemies.append(enemy1)
 
     # Generate a map of cells
     # widthNo - the number of cells in width
@@ -110,7 +115,7 @@ class Map:
         for cell in path3:
             path.append(cell)
 
-
+        
         # Find the corresponding waypoint cells
         for cell in path:
             # Update the cell ids in the path
@@ -118,7 +123,7 @@ class Map:
             cell.redoColor()
 
         self.path = path
-
+        self.createEnemy()
     
     def greedyBFS(self, startCell, endCell):
         evaluated = []
@@ -235,6 +240,12 @@ class Map:
                         self.walls.append(neighborCell)
                         currentWalls = currentWalls + 1
 
+    # Update each enemy position based on where it is in the path
+    def update(self,screen):
+
+        for enemy in self.enemies:
+            enemy.updatePosition()
+            enemy.drawEnemy(screen)
 
     # Find the closest cell based on a position entered
     def findCursorCell(self, position):
