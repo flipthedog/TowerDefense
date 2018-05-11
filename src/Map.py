@@ -6,6 +6,7 @@ from Cell import Cell
 import random
 import heapq
 from Enemy import Enemy
+from Tower import Tower
 
 class Map:
 
@@ -17,9 +18,10 @@ class Map:
 
         self.map = [] # Contains all the cells that make up the map
         self.path = [] # Ordered list of cells that make up the path for the enemies
+        self.walls = [] # List containing all the cells that make up the walls
         self.enemies = [] # List of all enemies currently on the field
         self.level = 0 # Incrementing level variable, increases difficulty
-        self.velocityPath = []
+        self.towers = [] # List of all towers currently on the map
 
         self.start = 0
         self.end = 0
@@ -29,6 +31,15 @@ class Map:
     def createEnemy(self):
         enemy1 = Enemy(0, 0, self.path)
         self.enemies.append(enemy1)
+
+    def createTower(self, cell, id):
+        if(cell.id is 1):
+            # The cell is a wall so create the tower
+            tower1 = Tower(cell, id)
+            self.towers.append(tower1)
+        else:
+            # The cell is not a tower, so don't create it
+            print("Error: Can only build towers on a wall")
 
     # Generate a map of cells
     # widthNo - the number of cells in width
@@ -123,8 +134,11 @@ class Map:
             cell.redoColor()
 
         self.path = path
+        self.generateWall()
         self.createEnemy()
-    
+
+        self.createTower(self.walls[0], 0)
+
     def greedyBFS(self, startCell, endCell):
         evaluated = []
 
@@ -242,6 +256,9 @@ class Map:
 
     # Update each enemy position based on where it is in the path
     def update(self,screen):
+
+        for tower in self.towers:
+            tower.drawTower(screen)
 
         for enemy in self.enemies:
             enemy.updatePosition()

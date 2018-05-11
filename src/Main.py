@@ -50,7 +50,6 @@ map.generateMap(mapWidthCells, mapHeightCells)
 
 map.generatePath(mapWidthCells, mapHeightCells)
 
-map.generateWall()
 
 drawMap(map)
 

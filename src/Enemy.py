@@ -37,23 +37,24 @@ class Enemy:
             self.gold = 1
             self.damage = 1
 
-    def generateWave(self,level):
-        pass
-
     # Based on enemy id, draw an enemy
     def drawEnemy(self, screen):
 
-        if self.id is 0:
-            self.enemyImage = pygame.image.load("Images/index.png")
-            self.enemyRect = self.enemyImage.get_rect()
-        elif self.id is 1:
-            pass
-        elif self.id is 2:
-            pass
+        if not self.goalReached:
+            if self.id is 0:
+                self.enemyImage = pygame.image.load("Images/index.png")
+                self.enemyRect = self.enemyImage.get_rect()
+            elif self.id is 1:
+                pass
+            elif self.id is 2:
+                pass
 
-        self.enemyRect.x = self.x
-        self.enemyRect.y = self.y
-        screen.blit(self.enemyImage, self.enemyRect)
+            self.enemyRect.x = self.x
+            self.enemyRect.y = self.y
+            self.enemyRect.width = 10
+            self.enemyRect.height = 10
+
+            screen.blit(self.enemyImage, (self.x, self.y, self.x + 10, self.y + 10), (0 , 0, 10, 10) )
 
     # Update the position of the enemy
     def updatePosition(self):
