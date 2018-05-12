@@ -13,6 +13,8 @@ class Enemy:
         self.dir = [0,0] # Direction that the enemy moves in
         self.vx = 1 # velocity variables of the enemy
         self.vy = 1 # velocity variables of the enemy
+        self.centerX = 0
+        self.centerY = 0
 
         # Type of enemy variables
         self.hp = 0
@@ -40,6 +42,8 @@ class Enemy:
     # Based on enemy id, draw an enemy
     def drawEnemy(self, screen):
 
+        imageOffset = 10
+
         if not self.goalReached:
             if self.id is 0:
                 self.enemyImage = pygame.image.load("Images/index.png")
@@ -49,12 +53,13 @@ class Enemy:
             elif self.id is 2:
                 pass
 
-            self.enemyRect.x = self.x
-            self.enemyRect.y = self.y
-            self.enemyRect.width = 10
-            self.enemyRect.height = 10
+            self.enemyRect.x = self.x + imageOffset / 2
+            self.enemyRect.y = self.y + imageOffset / 2
+            self.centerX = self.x + self.path[0].width + imageOffset / 2
+            self.centerY = self.y + self.path[0].height + imageOffset / 2
 
-            screen.blit(self.enemyImage, (self.x, self.y, self.x + 10, self.y + 10), (0 , 0, 10, 10) )
+            screen.blit(self.enemyImage, (self.enemyRect.x, self.enemyRect.y, self.x + 10, self.y + 10), (0 , 0,
+                            self.path[0].width - imageOffset, self.path[0].height - imageOffset) )
 
     # Update the position of the enemy
     def updatePosition(self):

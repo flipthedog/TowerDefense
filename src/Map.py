@@ -7,6 +7,7 @@ import random
 import heapq
 from Enemy import Enemy
 from Tower import Tower
+from Bullet import Bullet
 
 class Map:
 
@@ -22,6 +23,7 @@ class Map:
         self.enemies = [] # List of all enemies currently on the field
         self.level = 0 # Incrementing level variable, increases difficulty
         self.towers = [] # List of all towers currently on the map
+        self.bullets = [] # List of all bullets
 
         self.start = 0
         self.end = 0
@@ -259,10 +261,24 @@ class Map:
 
         for tower in self.towers:
             tower.drawTower(screen)
+            enemyTarget = tower.findTarget(self.enemies)
+            if enemyTarget is not None:
+                print("Created a new bullet")
+                newBullet = Bullet(tower.x, tower.y, 10, enemyTarget)
+                self.bullets.append(newBullet)
 
         for enemy in self.enemies:
             enemy.updatePosition()
             enemy.drawEnemy(screen)
+
+        if len(self.bullets) > 0:
+            print(len(self.bullets))
+            for bullet in self.bullets:
+                if bullet.distanceToTarget() < 1:
+                    self.bullets.remove(bullet)
+                else:
+                    bullet.updateBullet()
+                    bullet.drawBullet(screen)
 
     # Find the closest cell based on a position entered
     def findCursorCell(self, position):
