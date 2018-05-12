@@ -274,6 +274,7 @@ class Map:
         if len(self.bullets) > 0:
             print(len(self.bullets))
             for bullet in self.bullets:
+
                 if bullet.distanceToTarget() < 1:
                     self.bullets.remove(bullet)
                 else:
