@@ -21,6 +21,9 @@ def drawMap(map):
 
 
 pygame.init()
+
+timer = pygame.time.Clock()
+
 print(os.name)
 osString = os.name
 
@@ -77,13 +80,12 @@ while 1:
          if(neighbor is not None):
              neighbor.color = [255,255,0]
 
-
-
-
     drawMap(map)
-    map.update(screen)
+    dt = timer.tick(60)
+    map.update(screen, dt)
     pygame.display.flip()
-    time.sleep(0.01)
+    print(timer.get_rawtime())
+
 
     for neighbor in closestCell.neighbors:
         if(neighbor is not None):

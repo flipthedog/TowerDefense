@@ -257,45 +257,18 @@ class Map:
                         currentWalls = currentWalls + 1
 
     # Update each enemy position based on where it is in the path
-    def update(self,screen):
-
-        for e in pygame.event.get():
-            if e is pygame.USEREVENT + 1:
-                self.towers[0].toggleFireTrue()
+    def update(self,screen, deltaT):
 
         for tower in self.towers:
             tower.drawTower(screen)
 
-            if tower.canFire:
-                enemyTarget = tower.findTarget(self.enemies)
-                if enemyTarget is not None :
-                    # print("Created a new bullet")
-                    newBullet = Bullet(tower.x + self.path[0].width / 2, tower.y + self.path[0].height / 2,
-                                   5, enemyTarget)
-                    self.bullets.append(newBullet)
-                    tower.toggleFireFalse()
-
+            # Update the tower and bullets
+            tower.updateTower(screen, self.enemies, self.path, self.windowWidth, self.windowHeight, deltaT)
 
         for enemy in self.enemies:
             enemy.updatePosition()
             enemy.drawEnemy(screen)
 
-        if len(self.bullets) > 0:
-
-            for bullet in self.bullets:
-                # bullet.printEnemy()
-
-                if bullet.x < 0 or bullet.x > self.windowWidth or bullet.y < 0 or bullet.y > self.windowHeight:
-                    self.bullets.remove(bullet)
-                    print("Bullet removed outside")
-                else:
-
-                    if bullet.distanceToTarget() < 10:
-                        self.bullets.remove(bullet)
-                        print("Bullet removed - target hit")
-                    else:
-                        bullet.updateBullet()
-                        bullet.drawBullet(screen)
 
     # Find the closest cell based on a position entered
     def findCursorCell(self, position):

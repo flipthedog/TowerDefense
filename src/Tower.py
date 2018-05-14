@@ -3,11 +3,13 @@
 # Floris van Rossum
 
 import pygame, math
-import Bullet
+from Bullet import Bullet
 
 class Tower:
 
     def __init__(self, cell, id):
+
+        # Tower info
         self.cell = cell
         self.x = cell.x
         self.y = cell.y
@@ -15,26 +17,28 @@ class Tower:
         self.level = 0 # Level of the tower
         self.damage = 0 # Damage of the tower
         self.rate = 1000 # Fire rate of the tower
-        self.range = 1000 # Firing range of the tower
+        self.range = 100000 # Firing range of the tower
 
-
-        canShoot = pygame.USEREVENT + 1
-        pygame.time.set_timer(canShoot, self.rate)
-
+        # Firing info
         self.canFire = False
+        self.rate_timer = 0
         self.targetMode = 0 # Different targeting modes (weak, first, strong)
         self.orientation = 0 # Orientation of tower head
-
-        self.towerWidth = 10
-        self.towerHeight = 10
-
-        # Holds the tower image
-        self.towerImage = None
-        self.towerRect = None
+        self.shootEvent = pygame.USEREVENT + 1
+        pygame.time.set_timer(self.shootEvent, self.rate)
 
         self.target = None
 
-        # Based on the id load a specific tower
+        # Bullet info
+        self.bullets = []
+
+        # Tower image stuff
+        self.towerImage = None
+        self.towerRect = None
+        self.towerWidth = 10
+        self.towerHeight = 10
+
+        # Tower identification to load a specific tower
         if id is 0:
             self.damage = 1
         elif id is 1:
@@ -44,7 +48,7 @@ class Tower:
 
         #self.toggleFireTrue()
 
-    # toggle the can fire method
+    # toggle the can fire variable
     def toggleFireFalse(self):
         print("Toggled False")
         self.canFire = False
@@ -58,8 +62,35 @@ class Tower:
         pass
 
     # update tower variables
-    def updateTower(self):
-        pass
+    def updateTower(self, screen, enemies, path, windowWidth, windowHeight, deltaT):
+
+        self.rate_timer += deltaT
+        if self.rate_timer >= self.rate:
+            print "SPAWN"
+            self.fire(path,enemies)
+            self.rate_timer -= self.rate
+
+        # for e in pygame.event.get():
+        #     print("Event detected")
+        #     if e is self.shootEvent:
+        #         self.fire(path,enemies)
+
+        if len(self.bullets) > 0:
+
+            for bullet in self.bullets:
+                # bullet.printEnemy()
+
+                if bullet.x < 0 or bullet.x > windowWidth or bullet.y < 0 or bullet.y > windowHeight:
+                    self.bullets.remove(bullet)
+                    print("Bullet removed outside")
+                else:
+
+                    if bullet.distanceToTarget() < 10:
+                        self.bullets.remove(bullet)
+                        print("Bullet removed - target hit")
+                    else:
+                        bullet.updateBullet()
+                        bullet.drawBullet(screen)
 
     def findTarget(self, enemies):
 
@@ -93,3 +124,9 @@ class Tower:
         self.towerRect.x = self.x + imageOffset / 2
         self.towerRect.y = self.y + imageOffset / 2
         screen.blit(self.towerImage, self.towerRect, (0, 0, self.cell.width - imageOffset, self.cell.height - imageOffset))
+
+    def fire(self, path, enemies):
+        enemyTarget = self.findTarget(enemies)
+        newBullet = Bullet(self.x + path[0].width / 2, self.y + path[0].height / 2,
+                           5, enemyTarget)
+        self.bullets.append(newBullet)
