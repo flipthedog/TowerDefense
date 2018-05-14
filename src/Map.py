@@ -1,7 +1,7 @@
 # Tower Defense Map File
 # This will hold all the cells that consist of the map
 
-import math
+import math, pygame
 from Cell import Cell
 import random
 import heapq
@@ -259,27 +259,39 @@ class Map:
     # Update each enemy position based on where it is in the path
     def update(self,screen):
 
+        for e in pygame.event.get():
+            self.towers[0].toggleFire()
+
         for tower in self.towers:
             tower.drawTower(screen)
-            enemyTarget = tower.findTarget(self.enemies)
-            if enemyTarget is not None:
-                print("Created a new bullet")
-                newBullet = Bullet(tower.x, tower.y, 10, enemyTarget)
-                self.bullets.append(newBullet)
+
+            if tower.canFire:
+                enemyTarget = tower.findTarget(self.enemies)
+                if enemyTarget is not None :
+#                    print("Created a new bullet")
+                    newBullet = Bullet(tower.x + self.path[0].width / 2, tower.y + self.path[0].height / 2,
+                                   5, enemyTarget)
+                    self.bullets.append(newBullet)
+
 
         for enemy in self.enemies:
             enemy.updatePosition()
             enemy.drawEnemy(screen)
 
         if len(self.bullets) > 0:
-            print(len(self.bullets))
-            for bullet in self.bullets:
 
-                if bullet.distanceToTarget() < 1:
+            for bullet in self.bullets:
+                # bullet.printEnemy()
+
+                if bullet.x < 0 or bullet.x > self.windowWidth or bullet.y < 0 or bullet.y > self.windowHeight:
                     self.bullets.remove(bullet)
                 else:
-                    bullet.updateBullet()
-                    bullet.drawBullet(screen)
+
+                    if bullet.distanceToTarget() < 10:
+                        self.bullets.remove(bullet)
+                    else:
+                        bullet.updateBullet()
+                        bullet.drawBullet(screen)
 
     # Find the closest cell based on a position entered
     def findCursorCell(self, position):

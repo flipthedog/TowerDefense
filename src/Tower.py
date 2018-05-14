@@ -14,9 +14,13 @@ class Tower:
         self.id = id # ID of the tower, distiguishes type
         self.level = 0 # Level of the tower
         self.damage = 0 # Damage of the tower
-        self.rate = 0 # Fire rate of the tower
+        self.rate = 1000 # Fire rate of the tower
         self.range = 1000 # Firing range of the tower
 
+
+        pygame.time.set_timer(pygame.USEREVENT, self.rate)
+
+        self.canFire = False
         self.targetMode = 0 # Different targeting modes (weak, first, strong)
         self.orientation = 0 # Orientation of tower head
 
@@ -36,6 +40,16 @@ class Tower:
             pass
         else:
             print("Invalid tower id")
+
+        self.toggleFire()
+
+    # toggle the can fire method
+    def toggleFire(self):
+        print("Toggled")
+        if self.canFire:
+            self.canFire = False
+        else:
+            self.canFire = True
 
     # rotate the tower to face the enemy
     def rotate(self):

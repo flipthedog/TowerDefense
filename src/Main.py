@@ -77,6 +77,9 @@ while 1:
          if(neighbor is not None):
              neighbor.color = [255,255,0]
 
+
+
+
     drawMap(map)
     map.update(screen)
     pygame.display.flip()

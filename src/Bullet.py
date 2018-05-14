@@ -12,25 +12,29 @@ class Bullet:
         self.velocity = velocity # The total velocity of the bullet
         self.target = target # Enemy target object
         self.impact = False # Impacted the enemy?
-        self.width = 3
-        self.height = 3
+        self.width = 10
+        self.height = 10
 
     # Update the bullet position, speed, target location
     def updateBullet(self):
-        targetX = self.target.x
-        targetY = self.target.y
+        targetX = self.target.centerX
+        targetY = self.target.centerY
 
-        angle = math.tan(targetY / targetX)
+        angle = math.tan(  (-targetY + self.y) / (-targetX + self.x))
+        #print(angle)
         velX = self.velocity * math.cos(angle)
         velY = self.velocity * math.sin(angle)
 
         self.x = self.x + velX
         self.y = self.y + velY
 
+    def printEnemy(self):
+        print("X: " + str(self.target.x) + "Y: " + str(self.target.y))
+
     # draw the bullet
     def drawBullet(self, screen):
 
-        imageOffset = 10
+        imageOffset = 1
 
         if not self.impact:
             self.bulletImage = pygame.image.load("Images/index.png")
@@ -46,7 +50,7 @@ class Bullet:
 
     # Calculate the distance from bullet to target
     def distanceToTarget(self):
-        targetX = self.target.x
-        targetY = self.target.y
+        targetX = self.target.centerX
+        targetY = self.target.centerY
 
         return math.sqrt((self.x - targetX) ** 2 + (self.y - targetY) ** 2)
