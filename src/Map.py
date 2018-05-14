@@ -260,7 +260,8 @@ class Map:
     def update(self,screen):
 
         for e in pygame.event.get():
-            self.towers[0].toggleFire()
+            if e is pygame.USEREVENT + 1:
+                self.towers[0].toggleFireTrue()
 
         for tower in self.towers:
             tower.drawTower(screen)
@@ -268,10 +269,11 @@ class Map:
             if tower.canFire:
                 enemyTarget = tower.findTarget(self.enemies)
                 if enemyTarget is not None :
-#                    print("Created a new bullet")
+                    # print("Created a new bullet")
                     newBullet = Bullet(tower.x + self.path[0].width / 2, tower.y + self.path[0].height / 2,
                                    5, enemyTarget)
                     self.bullets.append(newBullet)
+                    tower.toggleFireFalse()
 
 
         for enemy in self.enemies:
@@ -285,10 +287,12 @@ class Map:
 
                 if bullet.x < 0 or bullet.x > self.windowWidth or bullet.y < 0 or bullet.y > self.windowHeight:
                     self.bullets.remove(bullet)
+                    print("Bullet removed outside")
                 else:
 
                     if bullet.distanceToTarget() < 10:
                         self.bullets.remove(bullet)
+                        print("Bullet removed - target hit")
                     else:
                         bullet.updateBullet()
                         bullet.drawBullet(screen)

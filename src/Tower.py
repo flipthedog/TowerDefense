@@ -18,7 +18,8 @@ class Tower:
         self.range = 1000 # Firing range of the tower
 
 
-        pygame.time.set_timer(pygame.USEREVENT, self.rate)
+        canShoot = pygame.USEREVENT + 1
+        pygame.time.set_timer(canShoot, self.rate)
 
         self.canFire = False
         self.targetMode = 0 # Different targeting modes (weak, first, strong)
@@ -41,15 +42,16 @@ class Tower:
         else:
             print("Invalid tower id")
 
-        self.toggleFire()
+        #self.toggleFireTrue()
 
     # toggle the can fire method
-    def toggleFire(self):
-        print("Toggled")
-        if self.canFire:
-            self.canFire = False
-        else:
-            self.canFire = True
+    def toggleFireFalse(self):
+        print("Toggled False")
+        self.canFire = False
+
+    def toggleFireTrue(self):
+        print("Toggled True")
+        self.canFire = True
 
     # rotate the tower to face the enemy
     def rotate(self):

@@ -20,7 +20,9 @@ class Bullet:
         targetX = self.target.centerX
         targetY = self.target.centerY
 
-        angle = math.tan(  (-targetY + self.y) / (-targetX + self.x))
+        if (-targetX + self.x) is not 0.0:
+            angle = math.tan(  (-targetY + self.y) / (-targetX + self.x))
+
         #print(angle)
         velX = self.velocity * math.cos(angle)
         velY = self.velocity * math.sin(angle)
