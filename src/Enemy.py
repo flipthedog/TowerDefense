@@ -55,8 +55,8 @@ class Enemy:
 
             self.enemyRect.x = self.x + imageOffset / 2
             self.enemyRect.y = self.y + imageOffset / 2
-            self.centerX = self.x + self.path[0].width + imageOffset / 2
-            self.centerY = self.y + self.path[0].height + imageOffset / 2
+            self.centerX = self.x + self.path[0].width/2 + imageOffset / 2
+            self.centerY = self.y + self.path[0].height/2 + imageOffset / 2
 
             screen.blit(self.enemyImage, (self.enemyRect.x, self.enemyRect.y, self.x + 10, self.y + 10), (0 , 0,
                             self.path[0].width - imageOffset, self.path[0].height - imageOffset) )

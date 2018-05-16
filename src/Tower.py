@@ -13,11 +13,14 @@ class Tower:
         self.cell = cell
         self.x = cell.x
         self.y = cell.y
+        self.centerX = 0
+        self.centerY = 0
+
         self.id = id # ID of the tower, distiguishes type
         self.level = 0 # Level of the tower
         self.damage = 0 # Damage of the tower
-        self.rate = 1000 # Fire rate of the tower
-        self.range = 100000 # Firing range of the tower
+        self.rate = 300 # Fire rate of the tower
+        self.range = 500 # Firing range of the tower
 
         # Firing info
         self.canFire = False
@@ -108,6 +111,11 @@ class Tower:
 
         imageOffset = 10
 
+        self.centerX = int(round(self.x + self.cell.width / 2 + imageOffset / 2))
+        self.centerY = int(round(self.y + self.cell.height / 2 + imageOffset / 2))
+
+        pygame.draw.circle(screen, pygame.Color('white'), [self.centerX, self.centerY], self.range, 2)
+
         if self.id is 0:
 
             self.towerImage = pygame.image.load("Images/index.png")
@@ -127,6 +135,8 @@ class Tower:
 
     def fire(self, path, enemies):
         enemyTarget = self.findTarget(enemies)
-        newBullet = Bullet(self.x + path[0].width / 2, self.y + path[0].height / 2,
-                           5, enemyTarget)
-        self.bullets.append(newBullet)
+
+        if enemyTarget is not None:
+            newBullet = Bullet(self.x + path[0].width / 2, self.y + path[0].height / 2,
+                               1, enemyTarget)
+            self.bullets.append(newBullet)

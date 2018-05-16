@@ -20,15 +20,51 @@ class Bullet:
         targetX = self.target.centerX
         targetY = self.target.centerY
 
-        if (-targetX + self.x) is not 0.0:
-            angle = math.tan(  (-targetY + self.y) / (-targetX + self.x))
+        threshold = 3
 
-        #print(angle)
-        velX = self.velocity * math.cos(angle)
-        velY = self.velocity * math.sin(angle)
+        if abs(targetX - self.x) > threshold:
+            if targetX > self.x:
+                self.x = self.x + self.velocity
+            elif targetX < self.x:
+                self.x = self.x - self.velocity
+        else:
+            self.x = self.x
 
-        self.x = self.x + velX
-        self.y = self.y + velY
+        if abs(targetY - self.y) > threshold:
+            if targetY > self.y:
+                self.y = self.y + self.velocity
+            elif targetY < self.x:
+                self.y = self.y - self.velocity
+        else:
+            self.y = self.y
+
+        #
+        # if (targetX > self.x):
+        #     if (-targetX + self.x) is not 0.0:
+        #         angle = math.tan(  (-targetY + self.y) / (-targetX + self.x))
+        # else:
+        #     if (-targetX + self.x) is not 0.0:
+        #         angle = math.tan(  (targetY - self.y) / (targetX - self.x))
+        #
+        # # angle = math.pi / 4
+        # #print(angle)
+        #
+        # velX = self.velocity * math.cos(angle)
+        # velY = self.velocity * math.sin(angle)
+        #
+        # if targetX > self.x:
+        #     self.x = self.x + velX
+        # elif targetX < self.x:
+        #     self.x = self.x - velX
+        # else:
+        #     self.x = self.x
+        #
+        # if targetY > self.y:
+        #     self.y = self.y + velY
+        # elif targetY < self.y:
+        #     self.y = self.y + velY
+        # else:
+        #     self.y = self.y
 
     def printEnemy(self):
         print("X: " + str(self.target.x) + "Y: " + str(self.target.y))

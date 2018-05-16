@@ -84,7 +84,9 @@ while 1:
     dt = timer.tick(60)
     map.update(screen, dt)
     pygame.display.flip()
-    print(timer.get_rawtime())
+
+    # Print the time in between each frame
+    #print(timer.get_rawtime())
 
 
     for neighbor in closestCell.neighbors:
