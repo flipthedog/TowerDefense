@@ -1,8 +1,13 @@
+# Main.py
+# Main loop of the tower defense program
+# Floris van Rossum
+
 import sys, pygame, os
 
 import time
 from Map import Map
 from Enemy import Enemy
+from HUD import HUD
 
 def drawMap(map):
 
@@ -17,8 +22,6 @@ def drawMap(map):
     cell = map.endCell
     color = pygame.Color(255, 0, 0, 255)
     pygame.draw.rect(screen, color, (cell.x, cell.y, cell.width, cell.height), 0)
-
-
 
 pygame.init()
 
@@ -61,28 +64,42 @@ closestCell = map.findCursorCell(mousePos)
 
 print("This is the length of map: " + str(len(map.map)))
 while 1:
+
+    # Event getter loop
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
 
     closestCell.redoColor()
 
+    # Get the latest mouse position
     mousePos = pygame.mouse.get_pos()
-    # print("The current mouse: " + str(mousePos))
+
+    # Find the closest cell
     closestCell = map.findCursorCell(mousePos)
+
+    # Debugging print statements
+    # print("The current mouse: " + str(mousePos))
     # print("Mouse x: " + str(mousePos[0]))
     # print("Mouse x: " + str(mousePos[1]))
     # print("Closesr Cell x:" + str(closestCell.x))
     # print("Closesr Cell y:" + str(closestCell.y))
 
-    #closestCell.color = [255,255,0]
+    # Color the closest cell neighbors
     for neighbor in closestCell.neighbors:
          if(neighbor is not None):
              neighbor.color = [255,255,0]
 
+
+
+    # Draw the map on the screen
     drawMap(map)
-    dt = timer.tick(60)
+
+    # Update the timer and the map
+    dt = timer.tick(100)
     map.update(screen, dt)
+
+    # Update the screen
     pygame.display.flip()
 
     # Print the time in between each frame

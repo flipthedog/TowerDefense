@@ -1,5 +1,5 @@
 # Tower Defense Map File
-# This will hold all the cells that consist of the map
+# Hold all the visual objects
 
 import math, pygame
 from Cell import Cell
@@ -8,6 +8,7 @@ import heapq
 from Enemy import Enemy
 from Tower import Tower
 from Bullet import Bullet
+from HUD import HUD
 
 class Map:
 
@@ -29,6 +30,8 @@ class Map:
         self.end = 0
         self.startCell = None
         self.endCell = None
+
+        self.hud = HUD(width, height)
 
     def createEnemy(self):
         enemy1 = Enemy(0, 0, self.path)
@@ -52,14 +55,9 @@ class Map:
         self.widthNumber = widthNo
         self.heightNumber = heightNo
 
-
+        bottomBarHeight = 100
         cellWidth = round(self.windowWidth/widthNo)
-        cellHeight = round(self.windowHeight/heightNo)
-
-        # print("Calculated Cell Height Count: " + str(heightNo))
-        # print("Calculated Cell Width Count: " + str(widthNo))
-        # print("Calculated Cell Height: " + str(cellHeight))
-        # print("Calculated Cell Width: " + str(cellWidth))
+        cellHeight = round( (self.windowHeight - bottomBarHeight)/heightNo)
 
         # Create a map of wall cells
         for i in range(0, heightNo):
@@ -128,7 +126,7 @@ class Map:
         for cell in path3:
             path.append(cell)
 
-        
+
         # Find the corresponding waypoint cells
         for cell in path:
             # Update the cell ids in the path
@@ -259,6 +257,9 @@ class Map:
     # Update each enemy position based on where it is in the path
     def update(self,screen, deltaT):
 
+        # Draw the hud on the screen
+        self.hud.drawHUD(screen)
+
         for tower in self.towers:
             tower.drawTower(screen)
 
@@ -268,6 +269,11 @@ class Map:
         for enemy in self.enemies:
             enemy.updatePosition()
             enemy.drawEnemy(screen)
+
+            if enemy.goalReached:
+                # The enemy has arrived at the goal
+                self.enemies.remove(enemy)
+                self.hud.baseHealth -= 1
 
 
     # Find the closest cell based on a position entered

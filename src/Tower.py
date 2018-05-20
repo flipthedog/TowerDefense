@@ -19,7 +19,7 @@ class Tower:
         self.id = id # ID of the tower, distiguishes type
         self.level = 0 # Level of the tower
         self.damage = 0 # Damage of the tower
-        self.rate = 300 # Fire rate of the tower
+        self.rate = 1000 # Fire rate of the tower
         self.range = 500 # Firing range of the tower
 
         # Firing info
@@ -69,7 +69,7 @@ class Tower:
 
         self.rate_timer += deltaT
         if self.rate_timer >= self.rate:
-            print "SPAWN"
+            #print("SPAWN")
             self.fire(path,enemies)
             self.rate_timer -= self.rate
 
@@ -85,12 +85,12 @@ class Tower:
 
                 if bullet.x < 0 or bullet.x > windowWidth or bullet.y < 0 or bullet.y > windowHeight:
                     self.bullets.remove(bullet)
-                    print("Bullet removed outside")
+                    # print("Bullet removed outside")
                 else:
 
                     if bullet.distanceToTarget() < 10:
                         self.bullets.remove(bullet)
-                        print("Bullet removed - target hit")
+                        # print("Bullet removed - target hit")
                     else:
                         bullet.updateBullet()
                         bullet.drawBullet(screen)
@@ -138,5 +138,5 @@ class Tower:
 
         if enemyTarget is not None:
             newBullet = Bullet(self.x + path[0].width / 2, self.y + path[0].height / 2,
-                               1, enemyTarget)
+                               20, enemyTarget)
             self.bullets.append(newBullet)
