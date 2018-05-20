@@ -4,6 +4,7 @@
 
 import pygame
 import pygame.draw as draw
+import math, random
 
 class HUD:
 
@@ -13,6 +14,8 @@ class HUD:
 
         self.storeToggled = False
 
+        self.buttonPressed = True
+
         gridWidth = 200
 
         hudWidth = 100
@@ -21,7 +24,7 @@ class HUD:
 
         storeWidth = 200
         storeHeight = windowHeight
-        self.storeRectangle = (10, windowHeight - (hudWidth/ 2) + 5, storeWidth, storeHeight)
+        self.storeRectangle = (windowWidth - storeWidth, 0, storeWidth, storeHeight)
 
         storeButtonHeight = 30
         storeButtonWidth = 150
@@ -55,6 +58,10 @@ class HUD:
     # Includes gold and base health, called repeatedly to update
     def drawHUD(self, screen):
 
+        # Check for button clicks
+        click = pygame.mouse.get_pressed()
+        #print("You clicked here: " + str(click))
+
         # Background rectangle
         backgroundColor = pygame.Color(60, 35, 71, 255)
         draw.rect(screen, backgroundColor, self.hudRectangle)
@@ -76,11 +83,61 @@ class HUD:
 
         # Draw the store
         if self.storeToggled:
-            self.drawStore()
+            self.drawStore(screen)
+
+    def checkIfOnButton(self, mouse, rectangle):
+        mouseX = mouse[0]
+        mouseY = mouse[1]
+
+        print("Mouse x,y: (" + str(mouseX) + ", " + str(mouseY) + ")")
+        print(rectangle)
+        if mouseX > rectangle[0] and mouseY > rectangle[1] and mouseX < (rectangle[0] + rectangle[2]) and mouseY < (rectangle[1] + rectangle[3]):
+            return True
+        else:
+            return False
 
     # Draw the store on the right side of the screen
-    def drawStore(self):
-        pass
+    def drawStore(self, screen):
+        # Store Background
+        storeColor = [23, 57, 112]
+        pygame.draw.rect(screen,storeColor, self.storeRectangle)
+
+        # Store title text
+        textColor = (255,255,255)
+        mainText = "Store"
+        surface = self.font.render(mainText, False, textColor)
+        textSize = self.font.size(mainText)
+        screen.blit(surface, (self.storeRectangle[0] + (self.storeRectangle[2] / 2) - (textSize[0] / 2), textSize[1]))
+
+        # Store buttons
+
+        gridX = self.windowWidth - self.storeRectangle[2]
+        gridY = 30
+        gridWidth = self.storeRectangle[2] / 2
+        gridHeight = 100
+
+        # Grid
+
+        # Button background color
+        backgroundColor = [86, 42, 142]
+
+        # (1,1)
+        backgroundColor[0] = backgroundColor[0] + random.randint(-10, 10)
+        backgroundColor[1] = backgroundColor[1] + random.randint(-10, 10)
+        backgroundColor[2] = backgroundColor[2] + random.randint(-10, 10)
+
+        self.button1Rectangle = (gridX, gridY, gridWidth, gridHeight)
+        pygame.draw.rect(screen, backgroundColor, self.button1Rectangle)
+
+        # (1,2)
+
+        backgroundColor[0] = backgroundColor[0] + random.randint(-10, 10)
+        backgroundColor[1] = backgroundColor[1] + random.randint(-10, 10)
+        backgroundColor[2] = backgroundColor[2] + random.randint(-10, 10)
+
+        self.button2Rectangle = (gridX + gridWidth, gridY, gridWidth, gridHeight)
+        pygame.draw.rect(screen, backgroundColor, self.button2Rectangle)
+
 
     # Deal damage to the base
     def dealDamage(self, damage):

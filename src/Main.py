@@ -69,6 +69,12 @@ while 1:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
+        if event.type == pygame.MOUSEBUTTONUP:
+            print("You clicked")
+            mouse = pygame.mouse.get_pos()
+            if map.hud.checkIfOnButton(mouse, map.hud.storeButtonRectangle):
+                map.hud.storeToggled = not map.hud.storeToggled
+
 
     closestCell.redoColor()
 
@@ -96,7 +102,7 @@ while 1:
     drawMap(map)
 
     # Update the timer and the map
-    dt = timer.tick(100)
+    dt = timer.tick(60)
     map.update(screen, dt)
 
     # Update the screen
